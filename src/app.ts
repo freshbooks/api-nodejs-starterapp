@@ -42,7 +42,7 @@ authRouter.get(
 		failureFlash: 'Unauthorized user',
 	}),
 	(req: RequestWithAccount, res) => {
-		const account = req.account
+		const { account } = req
 		if (account) {
 			res.send(`Welcome ${account.id}`)
 		} else {
