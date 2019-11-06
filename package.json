@@ -63,7 +63,9 @@
 		"eslint-config-prettier": "^6.5.0",
 		"eslint-plugin-import": "^2.18.2",
 		"eslint-plugin-prettier": "^3.1.1",
+		"husky": "^3.0.9",
 		"jest": "^24.9.0",
+		"lint-staged": "^9.4.2",
 		"node-sass": "^4.12.0",
 		"nodemon": "^1.19.2",
 		"prettier": "^1.18.2",
@@ -76,5 +78,16 @@
 	"jest": {
 		"preset": "ts-jest",
 		"testEnvironment": "node"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged"
+		}
+	},
+	"lint-staged": {
+		"**/*.ts": [
+			"./node_modules/.bin/eslint \"**/*.{js,ts}\" --quiet --fix",
+			"git add"
+		]
 	}
 }
