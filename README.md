@@ -9,8 +9,8 @@ The NodeJS Starter is a pre-configured `ExpressJS` app to quickly build FreshBoo
 Clone / fork the repo and install dependencies:
 
 ```shell
-$ git clone git@github.com:freshbooks/api-starterapp.git
-$ cd api-starterapp
+$ git clone ggit@github.com:freshbooks/api-nodejs-starterapp.git
+$ cd api-nodejs-starterapp
 
 $ npm install
 
