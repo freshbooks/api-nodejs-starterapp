@@ -17,7 +17,7 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost'
 const serializeUser = (
 	{ id, token, refreshToken }: SessionUser,
 	done: (err: any, id?: string) => void
-) => {
+): void => {
 	// create or update session user
 	UserModel.findOneAndUpdate(
 		{ id },
@@ -38,7 +38,7 @@ const serializeUser = (
 const deserializeUser = (
 	id: string,
 	done: (err: any, user?: SessionUser) => void
-) => {
+): void => {
 	UserModel.findOne({ id }, (err, user) => {
 		if (user !== undefined && user !== null) {
 			done(null, {
