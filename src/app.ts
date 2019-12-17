@@ -1,5 +1,7 @@
+import path from 'path'
 import connectMongo from 'connect-mongo'
 import session from 'express-session'
+import views from 'express-react-views'
 import mongoose from 'mongoose'
 import morgan from 'morgan'
 import { createApp, SessionUser } from '@freshbooks/app'
@@ -72,12 +74,19 @@ const app = createApp(CLIENT_ID, CLIENT_SECRET, CALLBACK_URL, {
 	deserializeUser,
 })
 
-app.use(morgan('combined')) // set up logging
+// set up logging
+app.use(morgan('combined'))
 
-// setup auth router
+// set up view engine
+app.set('views', path.join(__dirname, '..', 'views'))
+app.set('view engine', 'js')
+app.engine('js', views.createEngine())
+
+// set up routing
 app.use('/auth/freshbooks', AuthRouter)
-
-// setup app router
 app.use('/app', AppRouter)
+app.get('/', (req, res) => {
+	res.render('index')
+})
 
 export default app
