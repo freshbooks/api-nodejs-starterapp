@@ -1,11 +1,9 @@
 import connectMongo from 'connect-mongo'
-import { Router } from 'express'
 import session from 'express-session'
 import mongoose from 'mongoose'
 import morgan from 'morgan'
-import passport from 'passport'
-import { createApp } from '@freshbooks/app'
-import { SessionUser } from '@freshbooks/app/dist/PassportStrategy'
+import { createApp, SessionUser } from '@freshbooks/app'
+import { AuthRouter, AppRouter } from './routes'
 import { User as UserModel } from './models'
 
 const CLIENT_ID = process.env.CLIENT_ID || ''
@@ -56,6 +54,7 @@ const deserializeUser = (
 mongoose.connect(MONGODB_URI, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
+	useFindAndModify: false,
 })
 
 const MongoStore = connectMongo(session)
@@ -76,24 +75,9 @@ const app = createApp(CLIENT_ID, CLIENT_SECRET, CALLBACK_URL, {
 app.use(morgan('combined')) // set up logging
 
 // setup auth router
-const authRouter = Router()
-authRouter.get(
-	'/redirect',
-	passport.authenticate('freshbooks', {
-		successRedirect: '/dashboard',
-		failureRedirect: '/',
-	})
-)
+app.use('/auth/freshbooks', AuthRouter)
 
-app.use('/auth/freshbooks', authRouter)
-
-app.use('/dashboard', (req, res) => {
-	const user = req.user as SessionUser
-	if (user) {
-		res.send(`Hello ${user.id}`)
-	} else {
-		res.sendStatus(401)
-	}
-})
+// setup app router
+app.use('/app', AppRouter)
 
 export default app
