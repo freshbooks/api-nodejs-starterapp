@@ -80,7 +80,18 @@ app.use(morgan('combined'))
 // set up view engine
 app.set('views', path.join(__dirname, '..', 'views'))
 app.set('view engine', 'js')
-app.engine('js', views.createEngine())
+app.engine(
+	'js',
+	views.createEngine({
+		babel: {
+			presets: [
+				'@babel/preset-typescript',
+				'@babel/preset-react',
+				['@babel/preset-env', { targets: { node: 'current' } }],
+			],
+		},
+	})
+)
 
 // set up routing
 app.use('/auth/freshbooks', AuthRouter)
