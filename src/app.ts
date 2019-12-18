@@ -86,7 +86,7 @@ app.engine('js', views.createEngine())
 app.use('/auth/freshbooks', AuthRouter)
 app.use('/app', AppRouter)
 app.get('/', (req, res) => {
-	res.render('index')
+	res.render('index', { callbackUrl: CALLBACK_URL })
 })
 
 export default app

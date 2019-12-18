@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { SessionUser } from '@freshbooks/app/dist/PassportStrategy'
+import { Client } from '@freshbooks/api'
 
 const router = Router()
 
@@ -12,9 +13,37 @@ router.use((req, res, next) => {
 	}
 })
 
-router.get('/dashboard', (req, res) => {
+router.get('/dashboard', async (req, res) => {
 	const user = req.user as SessionUser
-	res.send(`Hello ${user.id}`)
+	const client = new Client(user.token || '')
+	const { data: me } = await client.users.me()
+
+	// fetch first business account
+	if (me && me.businessMemberships && me.businessMemberships.length) {
+		const { accountId } = me.businessMemberships[0].business
+
+		const { data: itemData } = await client.items.list(accountId)
+		const itemCount: number = itemData ? itemData.items.length : 0
+
+		const { data: invoiceData } = await client.invoices.list(accountId)
+		const invoiceCount: number = invoiceData ? invoiceData.invoices.length : 0
+
+		const { data: paymentData } = await client.payments.list(accountId)
+		const paymentCount: number = paymentData ? paymentData.payments.length : 0
+
+		res.render('dashboard', {
+			me,
+			items: itemCount,
+			payments: paymentCount,
+			invoices: invoiceCount,
+		})
+	} else {
+		res.sendStatus(500)
+	}
+})
+
+router.get('/settings', async (req, res) => {
+	res.render('settings')
 })
 
 router.get('/logout', (req, res) => {
