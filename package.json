@@ -27,7 +27,7 @@
 	"dependencies": {
 		"@babel/preset-typescript": "^7.7.0",
 		"@freshbooks/api": "^1.0.3-alpha.2",
-		"@freshbooks/app": "^1.0.2-alpha.0",
+		"@freshbooks/app": "^1.0.2-alpha.1",
 		"body-parser": "^1.19.0",
 		"bootstrap": "^4.4.1",
 		"compression": "^1.7.4",
