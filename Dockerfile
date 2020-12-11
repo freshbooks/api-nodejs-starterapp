@@ -1,8 +1,22 @@
 FROM node:alpine
-EXPOSE 3000
 
 # setup working dir
 WORKDIR /usr/src/app
 
-COPY package.json yarn.lock ./
-RUN yarn --frozen-lockfile
+# Copy the deps
+COPY package.json .
+# For the private registry
+COPY .npmrc .
+
+# Fetch deps
+RUN npm install --quiet
+
+# Copy src files
+COPY . .
+
+# Now transpile
+RUN npm run build-ts
+
+EXPOSE 9999
+
+CMD npm start

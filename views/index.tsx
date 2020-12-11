@@ -43,12 +43,6 @@ const Index: React.FC = () => (
 				</Col>
 				<Col xs={10}>{process.env.CALLBACK_URL}</Col>
 			</Row>
-			<Row>
-				<Col>
-					<strong>Authorization URL:</strong>
-				</Col>
-				<Col xs={10}>{process.env.AUTHORIZATION_URL}</Col>
-			</Row>
 		</Container>
 		<nav className="navbar fixed-bottom navbar-expand-lg navbar-dark bg-primary">
 			<div className="container">
