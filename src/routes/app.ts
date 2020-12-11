@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { SessionUser } from '@freshbooks/app/dist/PassportStrategy'
-import { Client } from '@freshbooks/api'
+import { client } from '../app'
 
 const router = Router()
 
@@ -14,8 +14,6 @@ router.use((req, res, next) => {
 })
 
 router.get('/dashboard', async (req, res) => {
-	const user = req.user as SessionUser
-	const client = new Client(user.token || '')
 	const { data: me } = await client.users.me()
 
 	// fetch first business account

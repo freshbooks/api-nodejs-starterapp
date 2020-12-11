@@ -1,41 +1,62 @@
-# FreshBooks NodeJS Starter
+# FreshBooks Integrations Starter App
 
-![](https://github.com/freshbooks/api-starterapp/workflows/Node%20CI/badge.svg)
+The NodeJS Starter is a pre-configured `ExpressJS` app to quickly build FreshBooks integrations.
 
-The NodeJS Starter is a pre-configured `ExpressJS` app to quickly build FreshBooks app integrations.
-
-## Installation
+### Installation
 
 Clone / fork the repo and install dependencies:
 
 ```shell
-$ git clone ggit@github.com:freshbooks/api-nodejs-starterapp.git
+$ git clone git@github.com:freshbooks/api-nodejs-starterapp.git
 $ cd api-nodejs-starterapp
 
-$ npm install
-
-# Or, if you prefer yarn
-$ yarn install
 ```
 
-## Getting started
+### Configure with your credentials
 
-The starter app is configured to look for `CLIENT_ID`, `CLIENT_SECRET`, and `CALLBACK_URL` from your shell's environment variables.
-
-To setup your app, set the following environment variables in your shell, or provide a `.env` file with the required values.
-After setting up the app environment variables, the app is ready for use.
-
-```bash
-export CLIENT_ID=client_id
-export CLIENT_SECRET=client_secret
-export CALLBACK_URL=https://freshbooks.app/auth/freshbooks/redirect
-
-yarn build
-yarn start
-
-# To watch for changes, and rebuild on save, use `watch`
-yarn watch
-
-# To watch for changes, and debug, use `debug:watch`
-yarn debug:watch
+* [ngrok](https://ngrok.com/) is recommended for the Redirect URI
+```shell
+ngrok http 9999
+Grab the url from the output, something like https://<random_characters>.ngrok.io
 ```
+* Create an app using following the steps outlined in the [API docs](https://www.freshbooks.com/api/start)
+    * The redirect_uri should be the `ngrok` url from above in the form `https://<random_characters>.ngrok.io/auth/freshbooks/redirect`
+* Additionally the `app` uses the [FreshBooks Node SDK](https://github.com/freshbooks/freshbooks-nodejs-sdk) 
+    * The SDK is not currently in `npm` but in [github packages](https://github.com/features/packages)
+    * Hence create a .npmrc with your auth token from github as per the [docs](https://docs.github.com/en/free-pro-team@latest/packages/using-github-packages-with-your-projects-ecosystem/configuring-npm-for-use-with-github-packages)
+* Create a `.env` file in the root of your project or rename & replace the vars in the provided `sample.env` file with your actual values
+
+```
+touch .env
+
+CLIENT_ID=...
+CLIENT_SECRET=...
+REDIRECT_URI=https://<random_characters>.ngrok.io/auth/freshbooks/redirect
+```
+
+**The redirect URI configured for the app created  must match the Redirect URI variable otherwise an "Invalid URI" error will be reported**
+
+### Build and Run
+
+* The app uses mongoDB for persisting user data
+* The environment is bootstrapped with `docker-compose + Makefile`
+* You may simply do `make up` which will start the `app` + `mondoDB` ready to accept requests
+
+### App Structure
+
+* Home - https://<random_characters>.ngrok.io
+    * Hit `Get Started` to Auth with FreshBooks
+    
+    ![image](docs/home.png)
+* Dashboard - https://<random_characters>.ngrok.io/app/dashboard
+    * List of your invoices, itesm and payments from FreshBooks
+    
+    ![Alt text](docs/dashboard.png)
+* Settings - https://<random_characters>.ngrok.io/app/settings
+    * `Unlink` to disconnect your `app`
+    
+    ![Alt text](docs/settings.png)
+
+### Contributing
+You are very welcome to add/improve functionality . Please open a PR and submit a reasonable description about why it 
+is needed
