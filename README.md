@@ -2,7 +2,7 @@
 
 The NodeJS Starter is a pre-configured `ExpressJS` app to quickly build FreshBooks integrations.
 
-## Installation
+### Installation
 
 Clone / fork the repo and install dependencies:
 
@@ -42,7 +42,7 @@ REDIRECT_URI=https://<random_characters>.ngrok.io/auth/freshbooks/redirect
 * The environment is bootstrapped with `docker-compose + Makefile`
 * You may simply do `make up` which will start the `app` + `mondoDB` ready to accept requests
 
-## App Structure
+### App Structure
 
 * Home - https://<random_characters>.ngrok.io
     * Hit `Get Started` to Auth with FreshBooks
@@ -57,6 +57,6 @@ REDIRECT_URI=https://<random_characters>.ngrok.io/auth/freshbooks/redirect
     
     ![Alt text](docs/settings.png)
 
-## Contributing
+### Contributing
 You are very welcome to add/improve functionality . Please open a PR and submit a reasonable description about why it 
 is needed
