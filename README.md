@@ -22,8 +22,9 @@ Grab the url from the output, something like https://<random_characters>.ngrok.i
 * Create an app using following the steps outlined in the [API docs](https://www.freshbooks.com/api/start)
     * The redirect_uri should be the `ngrok` url from above in the form `https://<random_characters>.ngrok.io/auth/freshbooks/redirect`
 * Additionally the `app` uses the [FreshBooks Node SDK](https://github.com/freshbooks/freshbooks-nodejs-sdk) 
-    * The SDK is not currently in `npm` but in [github packages](https://github.com/features/packages)
-    * Hence create a .npmrc with your auth token from github as per the [docs](https://docs.github.com/en/free-pro-team@latest/packages/using-github-packages-with-your-projects-ecosystem/configuring-npm-for-use-with-github-packages)
+    * The SDK is now in npm, however please make sure you use the versions `"@freshbooks/api": "^1.2.4" and "@freshbooks/app": "^1.0.22"`
+    * [Optional] The SDK is not currently in `npm` but in [github packages](https://github.com/features/packages)
+    * [Optional] Hence create a .npmrc with your auth token from github as per the [docs](https://docs.github.com/en/free-pro-team@latest/packages/using-github-packages-with-your-projects-ecosystem/configuring-npm-for-use-with-github-packages)
 * Create a `.env` file in the root of your project or rename & replace the vars in the provided `sample.env` file with your actual values
 
 ```
@@ -49,7 +50,7 @@ REDIRECT_URI=https://<random_characters>.ngrok.io/auth/freshbooks/redirect
     
     ![image](docs/home.png)
 * Dashboard - https://<random_characters>.ngrok.io/app/dashboard
-    * List of your invoices, itesm and payments from FreshBooks
+    * List of your invoices, items and payments from FreshBooks
     
     ![Alt text](docs/dashboard.png)
 * Settings - https://<random_characters>.ngrok.io/app/settings

@@ -10,7 +10,7 @@ services:
       - db
 
   db:
-    container_name: fb-app-db
+    container_name: fb-starter-app-db
     image: mongo:latest
     ports:
       - '27017:27017'
