@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 # Copy the deps
 COPY package.json .
 # For the private registry
-COPY .npmrc .
+#COPY .npmrc .
 
 # Fetch deps
 RUN npm install --quiet

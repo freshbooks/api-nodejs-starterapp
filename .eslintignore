@@ -5,6 +5,8 @@ coverage/*
 packages/**/dist/*
 packages/**/coverage/*
 
+node_modules/*
+
 # data definition files
 **/*.d.ts
 # 3rd party libs

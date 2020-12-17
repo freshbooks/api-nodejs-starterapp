@@ -14,7 +14,7 @@ const CLIENT_ID = process.env.CLIENT_ID || ''
 const CLIENT_SECRET = process.env.CLIENT_SECRET || ''
 const CALLBACK_URL = process.env.CALLBACK_URL || ''
 const SESSION_SECRET = process.env.SESSION_SECRET || 'sekret'
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://0.0.0.0:52100'
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://0.0.0.0:27017'
 
 export let client: Client
 
@@ -53,7 +53,6 @@ const deserializeUser = (
 }
 
 const freshbooksVerifyFn = async (
-	req: Express.Request,
 	token: string,
 	refreshToken: string,
 	profile: object,
