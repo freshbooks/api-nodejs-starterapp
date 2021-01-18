@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:14
 
 # setup working dir
 WORKDIR /usr/src/app

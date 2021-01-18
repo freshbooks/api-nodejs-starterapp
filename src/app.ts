@@ -41,7 +41,7 @@ const deserializeUser = (
 	id: string,
 	done: (err: any, user?: SessionUser) => void
 ): void => {
-	UserModel.findOne({ id }, (err, user) => {
+	UserModel.findOne({ id }, (err: any, user: any) => {
 		if (user !== undefined && user !== null) {
 			done(null, {
 				id: user.id,
