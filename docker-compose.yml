@@ -1,0 +1,22 @@
+version: '3.7'
+
+services:
+  app:
+    container_name: fb-starter-app
+    build: .
+    ports:
+      - "9999:9999"
+    links:
+      - db
+
+  db:
+    container_name: fb-starter-app-db
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-volume:/data/db
+
+volumes:
+  mongo-volume:
+
