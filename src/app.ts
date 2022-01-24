@@ -3,7 +3,6 @@ import connectMongo from 'connect-mongo'
 import session from 'express-session'
 import views from 'express-react-views'
 import mongoose from 'mongoose'
-import morgan from 'morgan'
 import { createApp, SessionUser } from '@freshbooks/app'
 import { VerifyCallback } from 'passport-oauth2'
 import { Client } from '@freshbooks/api'
@@ -16,12 +15,19 @@ const CALLBACK_URL = process.env.CALLBACK_URL || ''
 const SESSION_SECRET = process.env.SESSION_SECRET || 'sekret'
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://0.0.0.0:27017'
 
+const fbAPIClientOptions = {
+	clientId: CLIENT_ID,
+	apiUrl: 'https://api.freshbooks.com',
+	userAgent: 'FreshBooks Node/StarterApp',
+}
+
 export let client: Client
 
 const serializeUser = (
 	{ id }: SessionUser,
 	done: (err: any, id?: string) => void
 ): void => {
+	console.log(`Serialze user`, id)
 	// create or update session user
 	UserModel.findOneAndUpdate(
 		{ id },
@@ -41,6 +47,7 @@ const deserializeUser = (
 	id: string,
 	done: (err: any, user?: SessionUser) => void
 ): void => {
+	console.log(`Findin user `)
 	UserModel.findOne({ id }, (err: any, user: any) => {
 		if (user !== undefined && user !== null) {
 			done(null, {
@@ -58,13 +65,15 @@ const freshbooksVerifyFn = async (
 	profile: object,
 	done: VerifyCallback
 ): Promise<void> => {
-	client = new Client(token)
 	try {
+		client = new Client(token, fbAPIClientOptions)
 		const { data } = await client.users.me()
+		// const userId = 1
+		const identityId = data?.id
 
 		if (data) {
 			return done(null, {
-				id: data.id,
+				id: identityId,
 				businessMemberships: data.businessMemberships,
 				token,
 				refreshToken,

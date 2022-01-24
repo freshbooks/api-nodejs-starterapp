@@ -29,7 +29,6 @@ Grab the url from the output, something like https://<random_characters>.ngrok.i
 
 ```
 touch .env
-
 CLIENT_ID=...
 CLIENT_SECRET=...
 REDIRECT_URI=https://<random_characters>.ngrok.io/auth/freshbooks/redirect

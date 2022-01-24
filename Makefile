@@ -9,7 +9,7 @@ help:
          | column -t  -s '###'
 
 
-build: ## Build the app
+docker-build: ## Build the app
 	docker-compose build app
 
 up: ## Spins up the app with mongoDB
@@ -18,3 +18,11 @@ up: ## Spins up the app with mongoDB
 down: ## Tear down
 	docker-compose down
 
+clean: ## Removes dist
+	npm run clean
+
+run: ## Runs the app only outside docker
+	npm run serve
+
+build: ## Transpile
+	npm run build
