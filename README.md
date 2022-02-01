@@ -21,18 +21,23 @@ Grab the url from the output, something like https://<random_characters>.ngrok.i
 ```
 * Create an app using following the steps outlined in the [API docs](https://www.freshbooks.com/api/start)
     * The redirect_uri should be the `ngrok` url from above in the form `https://<random_characters>.ngrok.io/auth/freshbooks/redirect`
+    * Required App Scopes
+        * user:profile:read
+        * user:billable_items:read
+        * user:invoices:read
+        * user:payments:read
 * Additionally the `app` uses the [FreshBooks Node SDK](https://github.com/freshbooks/freshbooks-nodejs-sdk) 
-    * The SDK is now in npm, however please make sure you use the versions `"@freshbooks/api": "^1.2.4" and "@freshbooks/app": "^1.0.22"`
-    * [Optional] The SDK is not currently in `npm` but in [github packages](https://github.com/features/packages)
-    * [Optional] Hence create a .npmrc with your auth token from github as per the [docs](https://docs.github.com/en/free-pro-team@latest/packages/using-github-packages-with-your-projects-ecosystem/configuring-npm-for-use-with-github-packages)
+    * The SDK is now in npm, however please make sure you use the versions `"@freshbooks/api": "^3.0.0" and "@freshbooks/app": "^3.0.0"`
 * Create a `.env` file in the root of your project or rename & replace the vars in the provided `sample.env` file with your actual values
 
 ```
 touch .env
-
 CLIENT_ID=...
 CLIENT_SECRET=...
 REDIRECT_URI=https://<random_characters>.ngrok.io/auth/freshbooks/redirect
+SESSION_SECRET=...
+PORT=...
+MONGODB_URI=mongodb://MONGODB_HOST:MONGODB_PORT
 ```
 
 **The redirect URI configured for the app created  must match the Redirect URI variable otherwise an "Invalid URI" error will be reported**

@@ -3,7 +3,6 @@ import connectMongo from 'connect-mongo'
 import session from 'express-session'
 import views from 'express-react-views'
 import mongoose from 'mongoose'
-import morgan from 'morgan'
 import { createApp, SessionUser } from '@freshbooks/app'
 import { VerifyCallback } from 'passport-oauth2'
 import { Client } from '@freshbooks/api'
@@ -12,9 +11,17 @@ import { User as UserModel } from './models'
 
 const CLIENT_ID = process.env.CLIENT_ID || ''
 const CLIENT_SECRET = process.env.CLIENT_SECRET || ''
-const CALLBACK_URL = process.env.CALLBACK_URL || ''
+const REDIRECT_URI = process.env.REDIRECT_URI || ''
 const SESSION_SECRET = process.env.SESSION_SECRET || 'sekret'
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://0.0.0.0:27017'
+const API_URL = process.env.FRESHBOOKS_API_URL || 'https://api.freshbooks.com'
+
+const fbAPIClientOptions = {
+	clientId: CLIENT_ID,
+	clientSecret: CLIENT_SECRET,
+	apiUrl: API_URL,
+	userAgent: 'FreshBooks Node/StarterApp',
+}
 
 export let client: Client
 
@@ -58,13 +65,20 @@ const freshbooksVerifyFn = async (
 	profile: object,
 	done: VerifyCallback
 ): Promise<void> => {
-	client = new Client(token)
 	try {
+		const options = {
+			...fbAPIClientOptions,
+			accessToken: token,
+			refreshToken: refreshToken,
+		}
+		client = new Client(CLIENT_ID, options)
 		const { data } = await client.users.me()
+		// const userId = 1
+		const identityId = data?.id
 
 		if (data) {
 			return done(null, {
-				id: data.id,
+				id: identityId,
 				businessMemberships: data.businessMemberships,
 				token,
 				refreshToken,
@@ -79,15 +93,20 @@ const freshbooksVerifyFn = async (
 }
 
 // setup session
-mongoose.connect(MONGODB_URI, {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-	useFindAndModify: false,
-})
+mongoose
+	.connect(MONGODB_URI, {
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+		useFindAndModify: false,
+	})
+	.then(r => console.log('Connected to mongoDB'))
+	.catch(ex => {
+		console.error(`Failed to connect to mongo`, ex)
+	})
 
 const MongoStore = connectMongo(session)
 
-const app = createApp(CLIENT_ID, CLIENT_SECRET, CALLBACK_URL, {
+const app = createApp(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, {
 	sessionOptions: {
 		resave: false,
 		saveUninitialized: true,
@@ -110,7 +129,7 @@ app.engine('js', views.createEngine())
 app.use('/auth/freshbooks', AuthRouter)
 app.use('/app', AppRouter)
 app.get('/', (req, res) => {
-	res.render('index', { callbackUrl: CALLBACK_URL })
+	res.render('index', { callbackUrl: REDIRECT_URI })
 })
 
 export default app

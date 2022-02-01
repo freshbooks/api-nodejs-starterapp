@@ -3,8 +3,8 @@ import mongoose, { Schema, Document } from 'mongoose'
 
 export interface UserDocument extends Document {
 	id: string
-	token: string
-	refreshToken: string
+	token: string | undefined
+	refreshToken: string | undefined
 }
 
 const UserSchema: Schema = new Schema({
