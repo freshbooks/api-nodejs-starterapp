@@ -11,13 +11,15 @@ import { User as UserModel } from './models'
 
 const CLIENT_ID = process.env.CLIENT_ID || ''
 const CLIENT_SECRET = process.env.CLIENT_SECRET || ''
-const CALLBACK_URL = process.env.CALLBACK_URL || ''
+const REDIRECT_URI = process.env.REDIRECT_URI || ''
 const SESSION_SECRET = process.env.SESSION_SECRET || 'sekret'
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://0.0.0.0:27017'
+const API_URL = process.env.FRESHBOOKS_API_URL || 'https://api.freshbooks.com'
 
 const fbAPIClientOptions = {
 	clientId: CLIENT_ID,
-	apiUrl: 'https://api.freshbooks.com',
+	clientSecret: CLIENT_SECRET,
+	apiUrl: API_URL,
 	userAgent: 'FreshBooks Node/StarterApp',
 }
 
@@ -27,7 +29,6 @@ const serializeUser = (
 	{ id }: SessionUser,
 	done: (err: any, id?: string) => void
 ): void => {
-	console.log(`Serialze user`, id)
 	// create or update session user
 	UserModel.findOneAndUpdate(
 		{ id },
@@ -47,7 +48,6 @@ const deserializeUser = (
 	id: string,
 	done: (err: any, user?: SessionUser) => void
 ): void => {
-	console.log(`Findin user `)
 	UserModel.findOne({ id }, (err: any, user: any) => {
 		if (user !== undefined && user !== null) {
 			done(null, {
@@ -66,7 +66,12 @@ const freshbooksVerifyFn = async (
 	done: VerifyCallback
 ): Promise<void> => {
 	try {
-		client = new Client(token, fbAPIClientOptions)
+		const options = {
+			...fbAPIClientOptions,
+			accessToken: token,
+			refreshToken: refreshToken,
+		}
+		client = new Client(CLIENT_ID, options)
 		const { data } = await client.users.me()
 		// const userId = 1
 		const identityId = data?.id
@@ -101,7 +106,7 @@ mongoose
 
 const MongoStore = connectMongo(session)
 
-const app = createApp(CLIENT_ID, CLIENT_SECRET, CALLBACK_URL, {
+const app = createApp(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, {
 	sessionOptions: {
 		resave: false,
 		saveUninitialized: true,
@@ -124,7 +129,7 @@ app.engine('js', views.createEngine())
 app.use('/auth/freshbooks', AuthRouter)
 app.use('/app', AppRouter)
 app.get('/', (req, res) => {
-	res.render('index', { callbackUrl: CALLBACK_URL })
+	res.render('index', { callbackUrl: REDIRECT_URI })
 })
 
 export default app
